@@ -8,7 +8,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///employees.db'
 db = SQLAlchemy(app)
 #создание базы
 class Employee(db.Model):
-    d = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     position = db.Column(db.String(50))
 
