@@ -3,54 +3,47 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///employees.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///material.db'
 
 db = SQLAlchemy(app)
-#создание базы
-class Employee(db.Model):
+#БД
+class Material(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
-    position = db.Column(db.String(50))
+    quantity = db.Column(db.Integer)
 
-    def __init__(self, name, position):
+    def __init__(self, name, quantity):
         self.name = name
-        self.position = position
+        self.quantity = quantity
 
 
 with app.app_context():
     db.create_all()
 #запись данных
-@app.route('/add_employee', methods=['POST'])
-def add_employee():
+@app.route('/add_material', methods=['POST'])
+def add_material():
     name = request.form['name']
-    position = request.form['position']
-    employee = Employee(name, position)
-    db.session.add(employee)
+    quantity = request.form['quantity']
+    material = Material(name, quantity)
+    db.session.add(material)
     db.session.commit()
-    return{'success': 'Employee added successfully'}
+    return{'success': 'Material added successfully'}
 
-@app.route('/get_employee/<int:id>')
-def get_employee(id):
-    employee = Employee.query.get(id)
-    if employee:
+@app.route('/get_material/<int:id>')
+def get_material(id):
+    material = Material.query.get(id)
+    if material:
         return jsonify({
-            'id': employee.id,
-            'name': employee.name,
-            'position': employee.position
+            'id': material.id,
+            'name': material.name,
+            'quantity': material.quantity
         })
     else:
-        return{'error': 'Employee not found'}
-'''@app.route('/books/<int:id>')
-def get_book(id):
-    book = {
-        "id": id,
-        "title": "Flask API Development Cookbook",
-        "author": "Steven F, Lott",
-        "ppp": "123456"
-    }
-    return jsonify(book)
-'''
-#книги
+        return{'error': 'Material not found'}
 
 if __name__=="__main__":
-    app.run(host="0.0.0.0",debug=True)
+    app.run(host="0.0.0.0", debug=True)
+
+#import requests as r
+#res = requests.get(url = 'http://127.0.0.1:5000/get_material/1')
+#res = requests.post(url = 'http://127.0.0.1:5000/add_material', data = {'name': 'name1', 'quantity':'quantity1'})
